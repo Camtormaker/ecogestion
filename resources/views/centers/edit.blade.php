@@ -1,0 +1,63 @@
+<x-app-layout>
+    <div class="ecogestion-form-card mt-8">
+        <div class="ecogestion-section">
+            <span class="text-xs font-semibold uppercase tracking-widest text-emerald-100">EcoGestión</span>
+            <h2 class="text-xl font-bold">Editar centro: {{ $center->name }}</h2>
+        </div>
+        <div class="p-6">
+
+        <form action="{{ route('centers.update', $center->id) }}" method="POST" class="space-y-4">
+            @csrf
+            @method('PUT')
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Nombre del Centro</label>
+                <input type="text" name="name" value="{{ old('name', $center->name) }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 @error('name') border-red-500 @enderror">
+                @error('name') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Dirección</label>
+                <textarea name="address" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 @error('address') border-red-500 @enderror">{{ old('address', $center->address) }}</textarea>
+                @error('address') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Persona de Contacto</label>
+                <input type="text" name="contact_person" value="{{ old('contact_person', $center->contact_person) }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+                @error('contact_person') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Teléfono</label>
+                <input type="text" name="phone" value="{{ old('phone', $center->phone) }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+                @error('phone') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+                <input type="email" name="email" value="{{ old('email', $center->email) }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 @error('email') border-red-500 @enderror">
+                @error('email') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Estado</label>
+                <select name="status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500">
+                    <option value="1" {{ old('status', $center->status) == '1' ? 'selected' : '' }}>Activo</option>
+                    <option value="0" {{ old('status', $center->status) == '0' ? 'selected' : '' }}>Inactivo</option>
+                </select>
+                @error('status') <span class="text-xs text-red-500">{{ $message }}</span> @enderror
+            </div>
+
+            <div class="flex justify-end space-x-2 pt-4">
+                <a href="{{ route('centers.index') }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition">
+                    Cancelar
+                </a>
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+                    Guardar Cambios
+                </button>
+            </div>
+        </form>
+        </div>
+    </div>
+</x-app-layout>

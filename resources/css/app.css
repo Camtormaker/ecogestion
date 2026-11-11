@@ -45,6 +45,62 @@
     ::file-selector-button {
         border-color: var(--color-gray-200, currentColor);
     }
+
+    body {
+        background:
+            radial-gradient(circle at top right, rgba(16, 185, 129, 0.12), transparent 28rem),
+            linear-gradient(135deg, #f8fafc 0%, #ecfdf5 100%);
+    }
+
+    .ecogestion-page {
+        @apply mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8;
+    }
+
+    .ecogestion-card {
+        @apply overflow-hidden rounded-2xl border border-emerald-100 bg-white shadow-sm shadow-emerald-900/5;
+    }
+
+    .ecogestion-form-card {
+        @apply mx-auto max-w-2xl overflow-hidden rounded-2xl border border-emerald-100 bg-white shadow-sm;
+    }
+
+    .ecogestion-title {
+        @apply text-2xl font-bold tracking-tight text-zinc-900;
+    }
+
+    .ecogestion-section {
+        @apply border-b border-emerald-100 bg-gradient-to-r from-emerald-700 to-green-600 px-6 py-5 text-white;
+    }
+
+    input:not([type="checkbox"]):not([type="radio"]),
+    textarea,
+    select {
+        @apply rounded-lg border-zinc-300 bg-white text-zinc-800 shadow-sm transition;
+    }
+
+    input:not([type="checkbox"]):not([type="radio"]):focus,
+    textarea:focus,
+    select:focus {
+        @apply border-emerald-500 ring-emerald-500;
+    }
+
+    [data-flux-sidebar-item] {
+        color: #475569 !important;
+    }
+
+    [data-flux-sidebar-item]:hover {
+        color: #047857 !important;
+    }
+
+    [data-flux-sidebar-item][data-active],
+    [data-flux-sidebar-item][data-current] {
+        color: #047857 !important;
+        background-color: #ecfdf5 !important;
+    }
+
+    [data-flux-sidebar-group] > div:first-child {
+        color: #64748b !important;
+    }
 }
 
 [data-flux-field]:not(ui-radio, ui-checkbox) {

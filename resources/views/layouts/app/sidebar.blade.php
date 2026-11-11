@@ -1,34 +1,73 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         @include('partials.head')
     </head>
-    <body class="min-h-screen bg-white dark:bg-zinc-800">
-        <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+    <body class="min-h-screen bg-emerald-50/40 text-zinc-800">
+        <flux:sidebar sticky collapsible="mobile" class="border-e border-emerald-100 bg-white">
+            
             <flux:sidebar.header>
-                <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" wire:navigate />
+
+                <a href="{{ route('dashboard') }}"
+                    wire:navigate
+                    class="flex items-center gap-3 px-2 py-2 w-full">
+
+                    {{-- LOGO DE RECICLAJE --}}
+                    <div class="flex items-center justify-center
+                                size-14 rounded-xl bg-green-600
+                                shrink-0 shadow.md">
+
+                        <span class="text-5xl leading-none">♻️</span>
+
+                    </div>
+
+                    {{-- NOMBRE Y DESCRIPCIÓN --}}
+                    <div class="flex flex-col min-w-0">
+
+                        <span class="text-xl font-extrabold text-green-700 leading-tight">
+                            EcoGestión
+                        </span>
+
+                        <span class="text-xs text-zinc-500
+                                    leading-relaxed">
+                            Sistema de gestión de residuos reciclables
+                        </span>
+
+                    </div>
+
+                </a>
+
                 <flux:sidebar.collapse class="lg:hidden" />
+
             </flux:sidebar.header>
 
+
             <flux:sidebar.nav>
-                <flux:sidebar.group :heading="__('Platform')" class="grid">
-                    <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
+
+                <flux:sidebar.group :heading="__('Catálogos')" class="grid">
+                    <flux:sidebar.item icon="cube" :href="route('materials.index')" :current="request()->routeIs('materials.*')" wire:navigate>
+                        {{ __('Materiales') }}
+                    </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="map-pin" :href="route('points.index')" :current="request()->routeIs('points.*')" wire:navigate>
+                        {{ __('Puntos de recolección') }}
+                    </flux:sidebar.item>
+
+                    <flux:sidebar.item icon="building-office" :href="route('centers.index')" :current="request()->routeIs('centers.*')" wire:navigate>
+                        {{ __('Centros de reciclaje') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
+
+                @if (auth()->user()->isAdministrator())
+                    <flux:sidebar.group :heading="__('Administración')" class="grid">
+                        <flux:sidebar.item icon="users" :href="route('users.index')" :current="request()->routeIs('users.*')" wire:navigate>
+                            {{ __('Usuarios') }}
+                        </flux:sidebar.item>
+                    </flux:sidebar.group>
+                @endif
             </flux:sidebar.nav>
 
             <flux:spacer />
-
-            <flux:sidebar.nav>
-                <flux:sidebar.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
-                    {{ __('Repository') }}
-                </flux:sidebar.item>
-
-                <flux:sidebar.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" target="_blank">
-                    {{ __('Documentation') }}
-                </flux:sidebar.item>
-            </flux:sidebar.nav>
 
             <x-desktop-user-menu class="hidden lg:block" :name="auth()->user()->name" />
         </flux:sidebar>
