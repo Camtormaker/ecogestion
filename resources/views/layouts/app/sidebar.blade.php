@@ -2,13 +2,17 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         @include('partials.head')
+        <script>
+            localStorage.setItem('flux.appearance', 'light');
+            document.documentElement.classList.remove('dark');
+        </script>
     </head>
     <body class="min-h-screen bg-emerald-50/40 text-zinc-800">
         <flux:sidebar sticky collapsible="mobile" class="border-e border-emerald-100 bg-white">
             
             <flux:sidebar.header>
 
-                <a href="{{ route('dashboard') }}"
+                <a href="{{ route('materials.index') }}"
                     wire:navigate
                     class="flex items-center gap-3 px-2 py-2 w-full">
 
@@ -104,9 +108,11 @@
                     <flux:menu.separator />
 
                     <flux:menu.radio.group>
-                        <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>
-                            {{ __('Settings') }}
-                        </flux:menu.item>
+                        @if (auth()->user()->isAdministrator())
+                            <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>
+                                {{ __('Settings') }}
+                            </flux:menu.item>
+                        @endif
                     </flux:menu.radio.group>
 
                     <flux:menu.separator />

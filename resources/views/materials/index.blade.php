@@ -6,9 +6,11 @@
                 <h2 class="ecogestion-title">Catálogo de materiales reciclables</h2>
                 <p class="mt-1 text-sm text-zinc-500">Administra los residuos y materiales aceptados por el sistema.</p>
             </div>
-            <a href="{{ route('materials.create') }}" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
-                + Nuevo Material
-            </a>
+            @if (auth()->user()->isAdministrator())
+                <a href="{{ route('materials.create') }}" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+                    + Nuevo Material
+                </a>
+            @endif
         </div>
 
         @if (session('message'))
@@ -31,7 +33,9 @@
                         <th class="px-6 py-3">Categoría</th>
                         <th class="px-6 py-3">Unidad</th>
                         <th class="px-6 py-3">Estado</th>
-                        <th class="px-6 py-3 text-center">Acciones</th>
+                        @if (auth()->user()->isAdministrator())
+                            <th class="px-6 py-3 text-center">Acciones</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -45,22 +49,22 @@
                                     {{ $material->status ? 'Activo' : 'Inactivo' }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center justify-center gap-2">
-                                <a href="{{ route('materials.edit', $material) }}" class="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-100">Editar</a>
-                                
-                                <!-- Eliminación tradicional mediante formulario POST/DELETE -->
-                                <form action="{{ route('materials.destroy', $material) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este material?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-100">Eliminar</button>
-                                </form>
-                                </div>
-                            </td>
+                            @if (auth()->user()->isAdministrator())
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <a href="{{ route('materials.edit', $material) }}" class="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-100">Editar</a>
+                                        <form action="{{ route('materials.destroy', $material) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este material?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-100">Eliminar</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            @endif
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-4 text-center text-gray-400">No se encontraron materiales.</td>
+                            <td colspan="{{ auth()->user()->isAdministrator() ? 5 : 4 }}" class="px-6 py-4 text-center text-gray-400">No se encontraron materiales.</td>
                         </tr>
                     @endforelse
                 </tbody>

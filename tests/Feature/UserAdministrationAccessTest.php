@@ -16,7 +16,16 @@ test('operators and auditors cannot access user administration', function (strin
 
     $this->actingAs($user);
 
-    $this->get(route('users.index'))->assertForbidden();
+    $response = $this->get(route('users.index'));
+
+    if ($user->isOperator()) {
+        $response->assertRedirect(route('login'));
+        $this->assertGuest();
+
+        return;
+    }
+
+    $response->assertForbidden();
     $this->get(route('users.create'))->assertForbidden();
     $this->post(route('users.store'))->assertForbidden();
     $this->get(route('users.edit', $target))->assertForbidden();
@@ -24,16 +33,26 @@ test('operators and auditors cannot access user administration', function (strin
     $this->delete(route('users.destroy', $target))->assertForbidden();
 })->with(['Operador', 'Auditor']);
 
-test('administrators can access user administration', function (string $roleName) {
+test('eco admins can access user administration', function (string $roleName) {
     $this->actingAs(userWithRole($roleName));
 
     $this->get(route('users.index'))->assertOk();
-})->with(['Admin', 'Administrador']);
+})->with(['Ecoadmin', 'Admin', 'Administrador']);
 
-test('operators do not see the administration link in the navigation', function () {
-    $this->actingAs(userWithRole('Operador'));
+test('auditors can access the dashboard without the administration link', function () {
+    $this->actingAs(userWithRole('Ecoauditor'));
 
     $this->get(route('dashboard'))
         ->assertOk()
         ->assertDontSee(route('users.index'));
+});
+
+test('operators cannot access the Laravel dashboard', function () {
+    $this->actingAs(userWithRole('Ecooperador'));
+
+    $this->get(route('dashboard'))
+        ->assertRedirect(route('login'))
+        ->assertSessionHasErrors('email');
+
+    $this->assertGuest();
 });

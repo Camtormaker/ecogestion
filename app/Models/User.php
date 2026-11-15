@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use Laravel\Fortify\Contracts\PasskeyUser;
 use Laravel\Fortify\PasskeyAuthenticatable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Laravel\Sanctum\HasApiTokens;
 
 /**
  * @property int $id
@@ -36,7 +37,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable;
+    use HasApiTokens, HasFactory, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable;
 
     /**
      * Get the attributes that should be cast.
@@ -62,10 +63,40 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 
     public function isAdministrator(): bool
     {
-        return in_array(Str::lower(Str::ascii(trim($this->role?->name ?? ''))), [
+        return in_array($this->normalizedRoleName(), [
             'admin',
             'administrador',
+            'ecoadmin',
+            'ecoadministrador',
         ], true);
+    }
+
+    public function isOperator(): bool
+    {
+        return in_array($this->normalizedRoleName(), [
+            'operador',
+            'operadordecampo',
+            'ecooperador',
+            'ecooperadordecampo',
+        ], true);
+    }
+
+    public function isAuditor(): bool
+    {
+        return in_array($this->normalizedRoleName(), [
+            'auditor',
+            'directivo',
+            'ecoauditor',
+        ], true);
+    }
+
+    private function normalizedRoleName(): string
+    {
+        return preg_replace(
+            '/[\s_-]+/',
+            '',
+            Str::lower(Str::ascii(trim($this->role?->name ?? '')))
+        ) ?? '';
     }
 
     /**

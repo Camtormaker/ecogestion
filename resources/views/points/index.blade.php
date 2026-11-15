@@ -6,9 +6,11 @@
                 <h2 class="ecogestion-title">Puntos de recolección</h2>
                 <p class="mt-1 text-sm text-zinc-500">Organiza los lugares donde la comunidad entrega residuos reciclables.</p>
             </div>
-            <a href="{{ route('points.create') }}" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
-                + Nuevo Punto
-            </a>
+            @if (auth()->user()->isAdministrator())
+                <a href="{{ route('points.create') }}" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+                    + Nuevo Punto
+                </a>
+            @endif
         </div>
 
         @if (session('message'))
@@ -31,7 +33,9 @@
                         <th class="px-6 py-3">Dirección</th>
                         <th class="px-6 py-3">Contacto</th>
                         <th class="px-6 py-3">Estado</th>
-                        <th class="px-6 py-3 text-center">Acciones</th>
+                        @if (auth()->user()->isAdministrator())
+                            <th class="px-6 py-3 text-center">Acciones</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -46,21 +50,22 @@
                                     {{ $point->status ? 'Activo' : 'Inactivo' }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center justify-center gap-2">
-                                <a href="{{ route('points.edit', $point) }}" class="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-100">Editar</a>
-                                
-                                <form action="{{ route('points.destroy', $point) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este punto de recolección?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-100">Eliminar</button>
-                                </form>
-                                </div>
-                            </td>
+                            @if (auth()->user()->isAdministrator())
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <a href="{{ route('points.edit', $point) }}" class="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 transition hover:bg-emerald-100">Editar</a>
+                                        <form action="{{ route('points.destroy', $point) }}" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este punto de recolección?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-100">Eliminar</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            @endif
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-4 text-center text-gray-400">No se encontraron puntos de recolección.</td>
+                            <td colspan="{{ auth()->user()->isAdministrator() ? 6 : 5 }}" class="px-6 py-4 text-center text-gray-400">No se encontraron puntos de recolección.</td>
                         </tr>
                     @endforelse
                 </tbody>
