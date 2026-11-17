@@ -33,7 +33,7 @@ class AuthController extends Controller
 
         $user->loadMissing('role');
 
-        if (! $user->isAdministrator() && ! $user->isOperator() && ! $user->isAuditor()) {
+        if (! $user->isAdministrator() && ! $user->isOperator()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Tu rol no tiene acceso a EcoGestión React',

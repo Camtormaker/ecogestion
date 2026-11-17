@@ -13,8 +13,13 @@ class EnsureUserCanAccessReact
         $user = $request->user();
 
         abort_unless(
-            $user?->isAdministrator() || $user?->isOperator() || $user?->isAuditor(),
-            403
+            $user && (
+                $user->isAdministrator() ||
+                $user->isOperator() ||
+                $user->isAuditor()
+            ),
+            403,
+            'No tienes permiso para acceder al módulo de operaciones.'
         );
 
         return $next($request);

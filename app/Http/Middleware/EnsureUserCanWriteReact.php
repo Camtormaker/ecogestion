@@ -12,7 +12,14 @@ class EnsureUserCanWriteReact
     {
         $user = $request->user();
 
-        abort_unless($user?->isAdministrator() || $user?->isOperator(), 403);
+        abort_unless(
+            $user && (
+                $user->isAdministrator() ||
+                $user->isOperator()
+            ),
+            403,
+            'No tienes permiso para registrar operaciones.'
+        );
 
         return $next($request);
     }
